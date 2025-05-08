@@ -1,6 +1,6 @@
 import { Container, CssBaseline, Box } from "@mui/material"
 import { ThemeProvider } from "@mui/material/styles"
-import theme from "../theme"
+import theme from "./theme"
 import ProfileSection from "./components/ProfileSection"
 // import ExperienceSection from "./components/ExperienceSection"
 // import SkillsSection from "./components/SkillsSection"
