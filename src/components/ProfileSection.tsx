@@ -1,99 +1,130 @@
 import type React from "react"
-import { Avatar, Box, Typography, Paper, Button, Stack, Chip } from "@mui/material"
+import { Avatar, Box, Typography, Button, Stack, Chip, Container } from "@mui/material"
+import { styled } from "@mui/material/styles"
 import LinkedInIcon from "@mui/icons-material/LinkedIn"
 import GitHubIcon from "@mui/icons-material/GitHub"
 import EmailIcon from "@mui/icons-material/Email"
 import DownloadIcon from "@mui/icons-material/Download"
 
+const HeroSection = styled(Box)(({ theme }) => ({
+  minHeight: "100vh",
+  display: "flex",
+  alignItems: "center",
+  background: "#ffffff",
+  paddingTop: theme.spacing(8),
+  paddingBottom: theme.spacing(8),
+}))
+
+const LargeAvatar = styled(Avatar)(({ theme }) => ({
+  width: 160,
+  height: 160,
+  border: "4px solid white",
+  boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+  [theme.breakpoints.down("md")]: {
+    width: 120,
+    height: 120,
+  },
+}))
+
+const HeroTitle = styled(Typography)(({ theme }) => ({
+  fontWeight: 800,
+  fontSize: "3.5rem",
+  lineHeight: 1.2,
+  marginBottom: theme.spacing(2),
+  [theme.breakpoints.down("md")]: {
+    fontSize: "2.5rem",
+  },
+}))
+
+const SocialButton = styled(Button)(({ theme }) => ({
+  minWidth: "auto",
+  padding: theme.spacing(1.5),
+  borderRadius: "50%",
+}))
+
 const ProfileSection: React.FC = () => (
-  <Paper
-    elevation={1}
-    sx={{
-      p: 4,
-      display: "flex",
-      flexDirection: { xs: "column", md: "row" },
-      alignItems: "center",
-      mb: 4,
-      overflow: "hidden",
-      position: "relative",
-    }}
-  >
-    <Box
-      sx={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        height: "100px",
-        background: "linear-gradient(90deg, rgba(37,99,235,0.1) 0%, rgba(99,102,241,0.1) 100%)",
-        zIndex: 0,
-      }}
-    />
+  <HeroSection>
+    <Container maxWidth="lg">
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          alignItems: { xs: "center", md: "flex-start" },
+          textAlign: { xs: "center", md: "left" },
+        }}
+      >
+        <Box sx={{ mr: { md: 6 }, mb: { xs: 4, md: 0 } }}>
+          <LargeAvatar>SS</LargeAvatar>
+        </Box>
 
-    <Avatar
-      sx={{
-        width: 120,
-        height: 120,
-        mr: { xs: 0, md: 4 },
-        mb: { xs: 3, md: 0 },
-        border: "4px solid white",
-        boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-        zIndex: 1,
-      }}
-    >
-      SS
-    </Avatar>
+        <Box>
+          <HeroTitle variant="h1">Shibashish Sen</HeroTitle>
 
-    <Box sx={{ zIndex: 1 }}>
-      <Typography variant="h4" fontWeight={800} gutterBottom>
-        Shibashish Sen
-      </Typography>
-
-      <Typography variant="h6" color="primary" fontWeight={600} gutterBottom>
-        Product Management & AI Product Management Aspirant
-      </Typography>
-
-      <Typography variant="body1" sx={{ mb: 3, color: "text.secondary" }}>
-        7+ years of experience as an ML Engineer, Product Developer, and Frontend Team Lead. Passionate about building
-        impactful products at the intersection of AI and user experience.
-      </Typography>
-
-      <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ mb: 3 }}>
-        <Button variant="contained" startIcon={<DownloadIcon />} href="/resume.pdf" target="_blank">
-          Download Resume
-        </Button>
-
-        <Stack direction="row" spacing={1}>
-          <Button
-            variant="outlined"
-            href="https://linkedin.com/in/your-linkedin"
-            target="_blank"
-            aria-label="LinkedIn Profile"
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={2}
+            sx={{ mb: 4 }}
+            alignItems={{ xs: "center", sm: "flex-start" }}
           >
-            <LinkedInIcon />
-          </Button>
-          <Button
-            variant="outlined"
-            href="https://github.com/shibashish-sen"
-            target="_blank"
-            aria-label="GitHub Profile"
-          >
-            <GitHubIcon />
-          </Button>
-          <Button variant="outlined" href="mailto:your.email@example.com" aria-label="Email">
-            <EmailIcon />
-          </Button>
-        </Stack>
-      </Stack>
+            <Button
+              variant="contained"
+              size="large"
+              startIcon={<DownloadIcon />}
+              onClick={() => window.open("/resume.pdf", "_blank")}
+              sx={{
+                backgroundColor: "#7c3aed",
+                "&:hover": { backgroundColor: "#6d28d9" },
+                px: 4,
+                py: 1.5,
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: 600,
+              }}
+            >
+              Download Resume
+            </Button>
 
-      <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-        <Chip label="Product Management" color="primary" variant="outlined" />
-        <Chip label="AI/ML" color="primary" variant="outlined" />
-        <Chip label="Frontend Development" color="primary" variant="outlined" />
-        <Chip label="UX Design" color="primary" variant="outlined" />
-      </Stack>
-    </Box>
-  </Paper>
+            <Stack direction="row" spacing={1}>
+              <SocialButton
+                variant="outlined"
+                onClick={() => window.open("https://linkedin.com/in/shibashish-sen", "_blank")}
+                aria-label="LinkedIn Profile"
+              >
+                <LinkedInIcon />
+              </SocialButton>
+              <SocialButton
+                variant="outlined"
+                onClick={() => window.open("https://github.com/shibashish-sen", "_blank")}
+                aria-label="GitHub Profile"
+              >
+                <GitHubIcon />
+              </SocialButton>
+              <SocialButton 
+                variant="outlined" 
+                onClick={() => window.location.href = "mailto:shibashish.sen@gmail.com"} 
+                aria-label="Email"
+              >
+                <EmailIcon />
+              </SocialButton>
+            </Stack>
+          </Stack>
+
+          <Stack
+            direction="row"
+            spacing={1}
+            flexWrap="wrap"
+            useFlexGap
+            sx={{ justifyContent: { xs: "center", md: "flex-start" } }}
+          >
+            <Chip label="Product Management" color="primary" variant="outlined" />
+            <Chip label="AI/ML" color="primary" variant="outlined" />
+            <Chip label="Frontend Development" color="primary" variant="outlined" />
+            <Chip label="UX Design" color="primary" variant="outlined" />
+          </Stack>
+        </Box>
+      </Box>
+    </Container>
+  </HeroSection>
 )
 
 export default ProfileSection

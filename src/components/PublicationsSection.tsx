@@ -1,8 +1,56 @@
-import type React from "react"
-import { Box, Typography, Paper, Card, CardContent, CardActions, Button } from "@mui/material"
+import React from "react"
+import { Box, Typography, Container, List, ListItem, ListItemText, Button } from "@mui/material"
+import { styled } from "@mui/material/styles"
 import SchoolIcon from "@mui/icons-material/School"
-import ArticleIcon from "@mui/icons-material/Article"
-import LaunchIcon from "@mui/icons-material/Launch"
+
+const SectionTitle = styled(Typography)(({ theme }) => ({
+  fontWeight: 800,
+  fontSize: "2.5rem",
+  marginBottom: theme.spacing(1),
+  color: theme.palette.text.primary,
+}))
+
+const SectionSubtitle = styled(Typography)(({ theme }) => ({
+  fontSize: "1.25rem",
+  color: theme.palette.text.secondary,
+  marginBottom: theme.spacing(6),
+  maxWidth: "800px",
+}))
+
+const StyledListItem = styled(ListItem)(({ theme }) => ({
+  padding: theme.spacing(1, 0),
+}))
+
+const PublicationTitle = styled(Typography)(({ theme }) => ({
+  fontWeight: 600,
+  fontSize: "1.1rem",
+  marginBottom: theme.spacing(0.5),
+}))
+
+const PublicationMeta = styled(Typography)(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  fontSize: "0.9rem",
+  marginBottom: theme.spacing(0.5),
+}))
+
+const PublicationDescription = styled(Typography)(({ theme }) => ({
+  fontSize: "0.95rem",
+  color: theme.palette.text.secondary,
+}))
+
+const HeaderContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  gap: theme.spacing(2),
+  marginBottom: theme.spacing(4),
+}))
+
+const ScholarButton = styled(Button)(({ theme }) => ({
+  minWidth: "auto",
+  padding: theme.spacing(1),
+  borderRadius: "50%",
+  marginLeft: theme.spacing(2),
+}))
 
 interface Publication {
   title: string
@@ -28,7 +76,13 @@ const publications: Publication[] = [
       "Exploring the challenges and best practices in designing intuitive user interfaces for AI applications.",
     url: "https://example.com/publication2",
   },
-  // Add more publications as needed
+  {
+    title: "Ethical Considerations in AI Product Development",
+    journal: "AI Ethics Journal",
+    year: "2023",
+    description: "A framework for incorporating ethical considerations in AI product development lifecycle.",
+    url: "https://example.com/publication3",
+  },
 ]
 
 const patents: Publication[] = [
@@ -40,90 +94,92 @@ const patents: Publication[] = [
       "A novel approach to dynamically adapt user interfaces based on predicted user behavior and preferences.",
     url: "https://patents.google.com/patent/US12345678",
   },
-  // Add more patents as needed
+  {
+    title: "AI-Powered Content Recommendation System with User Privacy Protection",
+    journal: "US Patent Office - Patent No. 87654321",
+    year: "2022",
+    description:
+      "An innovative system that provides personalized content recommendations while maintaining user privacy through differential privacy techniques.",
+    url: "https://patents.google.com/patent/US87654321",
+  },
 ]
 
-const PublicationsSection: React.FC = () => (
-  <Paper elevation={1} sx={{ p: 4, mb: 4 }}>
-    <Box display="flex" alignItems="center" mb={3}>
-      <ArticleIcon color="primary" sx={{ mr: 1 }} />
-      <Typography variant="h5" fontWeight={700}>
-        Publications & Patents
-      </Typography>
-    </Box>
+const PublicationsSection: React.FC = () => {
+  return (
+    <Box id="publications" sx={{ py: 10, backgroundColor: "#ffffff" }}>
+      <Container maxWidth="lg">
+        <SectionTitle variant="h2">Publications & Patents</SectionTitle>
+        <SectionSubtitle variant="h6">
+          My research contributions and intellectual property in AI and product development.
+        </SectionSubtitle>
 
-    <Typography variant="h6" fontWeight={600} gutterBottom sx={{ mt: 2 }}>
-      Research Publications
-    </Typography>
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 4 }}>
-      {publications.map((pub, index) => (
-        <Box key={index} sx={{ width: '100%' }}>
-          <Card variant="outlined" sx={{ bgcolor: "background.default" }}>
-            <CardContent>
-              <Typography variant="h6" component="h3" fontWeight={600}>
-                {pub.title}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
-                {pub.journal}, {pub.year}
-              </Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
-                {pub.description}
-              </Typography>
-            </CardContent>
-            {pub.url && (
-              <CardActions>
-                <Button size="small" startIcon={<LaunchIcon />} href={pub.url} target="_blank">
-                  Read Publication
-                </Button>
-              </CardActions>
-            )}
-          </Card>
-        </Box>
-      ))}
-    </Box>
+        <HeaderContainer>
+          <Typography variant="h4" component="h2" gutterBottom sx={{ mb: 0 }}>
+            Research Publications
+          </Typography>
+          <ScholarButton
+            variant="outlined"
+            onClick={() => window.open("https://scholar.google.com/citations?user=YOUR_ID", "_blank")}
+            aria-label="Google Scholar Profile"
+          >
+            <SchoolIcon />
+          </ScholarButton>
+        </HeaderContainer>
 
-    <Typography variant="h6" fontWeight={600} gutterBottom sx={{ mt: 2 }}>
-      Patents
-    </Typography>
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-      {patents.map((patent, index) => (
-        <Box key={index} sx={{ width: '100%' }}>
-          <Card variant="outlined" sx={{ bgcolor: "background.default" }}>
-            <CardContent>
-              <Typography variant="h6" component="h3" fontWeight={600}>
-                {patent.title}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
-                {patent.journal}, {patent.year}
-              </Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
-                {patent.description}
-              </Typography>
-            </CardContent>
-            {patent.url && (
-              <CardActions>
-                <Button size="small" startIcon={<LaunchIcon />} href={patent.url} target="_blank">
-                  View Patent
-                </Button>
-              </CardActions>
-            )}
-          </Card>
-        </Box>
-      ))}
-    </Box>
+        <List>
+          {publications.map((pub, index) => (
+            <StyledListItem key={index}>
+              <ListItemText
+                primary={
+                  <PublicationTitle>
+                    {pub.title}
+                  </PublicationTitle>
+                }
+                secondary={
+                  <>
+                    <PublicationMeta>
+                      {pub.journal}, {pub.year}
+                    </PublicationMeta>
+                    <PublicationDescription>
+                      {pub.description}
+                    </PublicationDescription>
+                  </>
+                }
+              />
+            </StyledListItem>
+          ))}
+        </List>
 
-    <Box sx={{ mt: 3, textAlign: "center" }}>
-      <Button
-        variant="contained"
-        color="primary"
-        href="https://scholar.google.com/citations?user=YOUR_GOOGLE_SCHOLAR_ID"
-        target="_blank"
-        startIcon={<SchoolIcon />}
-      >
-        View on Google Scholar
-      </Button>
+        <Typography variant="h5" fontWeight={600} gutterBottom sx={{ mb: 1, mt: 6, color: "#7c3aed" }}>
+          Patents
+        </Typography>
+
+        <List>
+          {patents.map((patent, index) => (
+            <StyledListItem key={index}>
+              <ListItemText
+                primary={
+                  <PublicationTitle>
+                    {patent.title}
+                  </PublicationTitle>
+                }
+                secondary={
+                  <>
+                    <PublicationMeta>
+                      {patent.journal}, {patent.year}
+                    </PublicationMeta>
+                    <PublicationDescription>
+                      {patent.description}
+                    </PublicationDescription>
+                  </>
+                }
+              />
+            </StyledListItem>
+          ))}
+        </List>
+      </Container>
     </Box>
-  </Paper>
-)
+  )
+}
 
 export default PublicationsSection
