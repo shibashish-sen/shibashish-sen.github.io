@@ -80,6 +80,9 @@ const LargeAvatar = styled(Avatar)(({ theme }) => ({
   border: "4px solid white",
   boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
   marginBottom: theme.spacing(2),
+  [theme.breakpoints.down("md")]: {
+    display: "none",
+  },
 }))
 
 const NameText = styled(Typography)(({ theme }) => ({

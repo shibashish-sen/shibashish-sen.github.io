@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { Box, Avatar, Typography, Stack, Button } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import LinkedInIcon from "@mui/icons-material/LinkedIn"
@@ -53,12 +53,32 @@ const NameText = styled(Typography)(({ theme }) => ({
   textAlign: "center",
 }))
 
-const SubtitleText = styled(Typography)(({ theme }) => ({
+const TypewriterText = styled(Typography)(({ theme }) => ({
   fontSize: "1.25rem",
   color: theme.palette.text.secondary,
   marginBottom: theme.spacing(4),
   textAlign: "center",
   maxWidth: "600px",
+  minHeight: "2.5rem", // Prevent layout shift
+  fontFamily: "monospace",
+  "&::after": {
+    content: '""',
+    display: "inline-block",
+    width: "0.6em",
+    height: "1.2em",
+    backgroundColor: theme.palette.primary.main,
+    marginLeft: theme.spacing(0.5),
+    verticalAlign: "middle",
+    animation: "blink 1s step-end infinite",
+  },
+  "@keyframes blink": {
+    "0%, 100%": {
+      opacity: 1
+    },
+    "50%": {
+      opacity: 0
+    }
+  }
 }))
 
 const SocialButton = styled(Button)(({ theme }) => ({
@@ -80,14 +100,57 @@ const ResumeButton = styled(Button)(({ theme }) => ({
 }))
 
 const HeroSection: React.FC = () => {
+  const [displayText, setDisplayText] = useState("")
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isWaiting, setIsWaiting] = useState(false)
+
+  const keywords = ["Product Strategy", "AI", "Engineering"]
+  const typingSpeed = 120
+  const deletingSpeed = 50
+  const waitTime = 800
+
+  useEffect(() => {
+    const currentWord = keywords[currentIndex]
+    
+    if (isWaiting) {
+      const timer = setTimeout(() => {
+        setIsWaiting(false)
+        setIsDeleting(true)
+      }, waitTime)
+      return () => clearTimeout(timer)
+    }
+
+    if (isDeleting) {
+      if (displayText === "") {
+        setIsDeleting(false)
+        setCurrentIndex((prev) => (prev + 1) % keywords.length)
+      } else {
+        const timer = setTimeout(() => {
+          setDisplayText((prev) => prev.slice(0, -1))
+        }, deletingSpeed)
+        return () => clearTimeout(timer)
+      }
+    } else {
+      if (displayText === currentWord) {
+        setIsWaiting(true)
+      } else {
+        const timer = setTimeout(() => {
+          setDisplayText((prev) => currentWord.slice(0, prev.length + 1))
+        }, typingSpeed)
+        return () => clearTimeout(timer)
+      }
+    }
+  }, [displayText, isDeleting, currentIndex, isWaiting])
+
   return (
     <Container>
       <ContentWrapper>
         <LargeAvatar>SS</LargeAvatar>
         <NameText>Shibashish Sen</NameText>
-        <SubtitleText>
-          Product Engineer & AI Product Manager 
-        </SubtitleText>
+        <TypewriterText>
+          {displayText}
+        </TypewriterText>
 
         <Stack direction="row" spacing={2} sx={{ mb: 4 }}>
           <SocialButton
