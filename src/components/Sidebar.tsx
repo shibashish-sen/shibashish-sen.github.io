@@ -1,18 +1,18 @@
-import React from "react"
-import { 
-  Box, 
-  Avatar, 
-  Typography, 
-  Button, 
-  Stack, 
-  List, 
-  ListItem, 
-  IconButton, 
-  Drawer, 
-  ListItemText, 
-  useMediaQuery, 
+"use client"
+
+import type React from "react"
+import { useState, useEffect } from "react"
+import {
+  Box,
+  Avatar,
+  Typography,
+  Button,
+  List,
+  ListItem,
+  IconButton,
+  Drawer,
+  useMediaQuery,
   useTheme,
-  Fade 
 } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import LinkedInIcon from "@mui/icons-material/LinkedIn"
@@ -20,21 +20,25 @@ import GitHubIcon from "@mui/icons-material/GitHub"
 import EmailIcon from "@mui/icons-material/Email"
 import DownloadIcon from "@mui/icons-material/Download"
 import MenuIcon from "@mui/icons-material/Menu"
-import SchoolIcon from "@mui/icons-material/School"
 
 const SidebarContainer = styled(Box)(({ theme }) => ({
   width: 280,
-  height: "100vh",
-  position: "fixed",
-  left: "20%",
-  top: 0,
-  backgroundColor: "white",
-  padding: theme.spacing(2),
-  paddingTop: theme.spacing(3),
+  position: "sticky",
+  top: 32,
+  backdropFilter: "blur(16px)",
+  backgroundColor: "rgba(30, 41, 59, 0.7)",
+  padding: theme.spacing(3),
   display: "flex",
   flexDirection: "column",
-  transform: "translateX(-50%)",
-  transition: "opacity 0.2s ease-in-out",
+  borderRadius: 16,
+  boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
+  border: "1px solid rgba(148, 163, 184, 0.1)",
+  maxHeight: "calc(100vh - 64px)",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
+    borderColor: "rgba(124, 58, 237, 0.2)",
+  },
   [theme.breakpoints.down("md")]: {
     display: "none",
   },
@@ -43,8 +47,10 @@ const SidebarContainer = styled(Box)(({ theme }) => ({
 const MobileDrawer = styled(Drawer)(({ theme }) => ({
   "& .MuiDrawer-paper": {
     width: 280,
-    backgroundColor: "white",
+    backdropFilter: "blur(16px)",
+    backgroundColor: "rgba(30, 41, 59, 0.9)",
     padding: theme.spacing(2),
+    border: "none",
   },
 }))
 
@@ -65,103 +71,143 @@ const NavSection = styled(Box)(({ theme }) => ({
     width: "4px",
   },
   "&::-webkit-scrollbar-track": {
-    background: "#f1f1f1",
+    background: "rgba(30, 41, 59, 0.3)",
   },
   "&::-webkit-scrollbar-thumb": {
-    background: "#888",
+    background: "#4c1d95",
     borderRadius: "4px",
   },
 }))
 
-
-const LargeAvatar = styled(Avatar)(({ theme }) => ({
-  width: 180,
-  height: 180,
-  border: "4px solid white",
-  boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+const SidebarAvatar = styled(Avatar)(({ theme }) => ({
+  width: 100,
+  height: 100,
+  border: "4px solid rgba(124, 58, 237, 0.3)",
+  boxShadow: "0 4px 20px rgba(124, 58, 237, 0.3)",
   marginBottom: theme.spacing(2),
-  [theme.breakpoints.down("md")]: {
-    display: "none",
+  background: "linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: "scale(1.05)",
+    boxShadow: "0 8px 25px rgba(124, 58, 237, 0.4)",
   },
 }))
 
 const NameText = styled(Typography)(({ theme }) => ({
-  fontWeight: 500,
-  fontSize: "1.7rem",
+  fontWeight: 600,
+  fontSize: "1.25rem",
   lineHeight: 1.2,
-  marginBottom: theme.spacing(2),
+  marginBottom: theme.spacing(1),
   textAlign: "center",
+  background: "linear-gradient(135deg, #c4b5fd 0%, #a78bfa 100%)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
 }))
 
-const SocialButton = styled(Button)(({ theme }) => ({
-  minWidth: "auto",
-  padding: theme.spacing(1.5),
-  borderRadius: "50%",
+const SocialButton = styled(IconButton)(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  transition: "all 0.3s ease",
+  "&:hover": {
+    color: "#a78bfa",
+    backgroundColor: "rgba(124, 58, 237, 0.1)",
+    transform: "translateY(-3px)",
+  },
 }))
 
 const NavButton = styled(Button)(({ theme }) => ({
   color: theme.palette.text.primary,
   fontWeight: 500,
-  fontSize: "1rem",
+  fontSize: "0.95rem",
   textTransform: "none",
   width: "100%",
   justifyContent: "flex-start",
-  padding: theme.spacing(0.5, 2),
+  padding: theme.spacing(1, 2),
+  borderRadius: "12px",
+  marginBottom: theme.spacing(1),
+  transition: "all 0.3s ease",
+  position: "relative",
+  overflow: "hidden",
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    bottom: 0,
+    left: "50%",
+    width: 0,
+    height: "2px",
+    backgroundColor: "#a78bfa",
+    transition: "all 0.3s ease",
+    transform: "translateX(-50%)",
+  },
   "&:hover": {
-    backgroundColor: "rgba(124, 58, 237, 0.04)",
+    backgroundColor: "rgba(124, 58, 237, 0.1)",
+    transform: "translateY(-2px)",
+    "&::after": {
+      width: "80%",
+    },
   },
 }))
 
 const ResumeButton = styled(Button)(({ theme }) => ({
-  backgroundColor: "#7c3aed",
+  background: "linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)",
   color: "white",
   fontWeight: 600,
   textTransform: "none",
-  padding: "8px 24px",
-  borderRadius: "8px",
+  padding: "10px 16px",
+  borderRadius: "12px",
   width: "100%",
   marginTop: theme.spacing(2),
+  boxShadow: "0 4px 10px rgba(124, 58, 237, 0.3)",
+  transition: "all 0.3s ease",
   "&:hover": {
-    backgroundColor: "#6d28d9",
+    boxShadow: "0 6px 15px rgba(124, 58, 237, 0.4)",
+    transform: "translateY(-3px)",
   },
 }))
 
 const StyledList = styled(List)({
   padding: 0,
-  width: "80%",
+  width: "100%",
   "& .MuiListItem-root": {
     padding: 0,
     marginBottom: 4,
   },
 })
 
-interface SidebarProps {
-  show: boolean;
-}
-
-const Sidebar: React.FC<SidebarProps> = ({ show }) => {
-  const [mobileOpen, setMobileOpen] = React.useState(false)
-  const [activeSection, setActiveSection] = React.useState("")
+const Sidebar: React.FC = () => {
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState("")
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("md"))
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
-      const sections = navItems.map(item => item.href.slice(1))
-      const currentSection = sections.find(section => {
+      const sections = navItems.map((item) => item.href.slice(1))
+
+      // Find the section that is currently in view
+      let currentSection = ""
+      let minDistance = Number.MAX_VALUE
+
+      sections.forEach((section) => {
         const element = document.getElementById(section)
         if (element) {
           const rect = element.getBoundingClientRect()
-          return rect.top <= 100 && rect.bottom >= 100
+          const distance = Math.abs(rect.top)
+
+          if (distance < minDistance) {
+            minDistance = distance
+            currentSection = section
+          }
         }
-        return false
       })
+
       if (currentSection) {
         setActiveSection(currentSection)
       }
     }
 
     window.addEventListener("scroll", handleScroll)
+    handleScroll() // Initialize active section
+
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
@@ -182,43 +228,38 @@ const Sidebar: React.FC<SidebarProps> = ({ show }) => {
     { label: "Contact", href: "#contact" },
   ]
 
-  const drawerContent = (
+  const sidebarContent = (
     <>
       <TopSection>
-        <LargeAvatar>SS</LargeAvatar>
+        <SidebarAvatar>SS</SidebarAvatar>
         <NameText>Shibashish Sen</NameText>
+        <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 2 }}>
+          Product Management & AI
+        </Typography>
 
-        <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
           <SocialButton
-            variant="outlined"
+            size="small"
             onClick={() => window.open("https://linkedin.com/in/shibashish-sen", "_blank")}
             aria-label="LinkedIn Profile"
           >
             <LinkedInIcon />
           </SocialButton>
           <SocialButton
-            variant="outlined"
+            size="small"
             onClick={() => window.open("https://github.com/shibashish-sen", "_blank")}
             aria-label="GitHub Profile"
           >
             <GitHubIcon />
           </SocialButton>
-          <SocialButton 
-            variant="outlined" 
-            onClick={() => window.location.href = "mailto:shibashish.sen@gmail.com"} 
+          <SocialButton
+            size="small"
+            onClick={() => (window.location.href = "mailto:shibashish.sen@gmail.com")}
             aria-label="Email"
           >
             <EmailIcon />
           </SocialButton>
-        </Stack>
-
-        <ResumeButton
-          variant="contained"
-          startIcon={<DownloadIcon />}
-          onClick={() => window.open("/resume.pdf", "_blank")}
-        >
-          Download Resume
-        </ResumeButton>
+        </Box>
       </TopSection>
 
       <NavSection>
@@ -228,9 +269,21 @@ const Sidebar: React.FC<SidebarProps> = ({ show }) => {
               <NavButton
                 onClick={() => handleNavClick(item.href)}
                 sx={{
-                  color: activeSection === item.href.slice(1) ? "#7c3aed" : "text.primary",
-                  "&:hover": {
-                    backgroundColor: "rgba(124, 58, 237, 0.04)",
+                  color: activeSection === item.href.slice(1) ? "#c4b5fd" : "text.primary",
+                  backgroundColor: activeSection === item.href.slice(1) ? "rgba(124, 58, 237, 0.15)" : "transparent",
+                  fontWeight: activeSection === item.href.slice(1) ? 600 : 500,
+                  "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    left: 0,
+                    width: activeSection === item.href.slice(1) ? "4px" : "0px",
+                    height: "60%",
+                    background: "linear-gradient(180deg, #a78bfa 0%, #7c3aed 100%)",
+                    borderRadius: "0 4px 4px 0",
+                    transition: "width 0.3s ease-in-out",
+                  },
+                  "&::after": {
+                    width: activeSection === item.href.slice(1) ? "50%" : "0%",
                   },
                 }}
               >
@@ -240,6 +293,14 @@ const Sidebar: React.FC<SidebarProps> = ({ show }) => {
           ))}
         </StyledList>
       </NavSection>
+
+      <ResumeButton
+        variant="contained"
+        startIcon={<DownloadIcon />}
+        onClick={() => window.open("/resume.pdf", "_blank")}
+      >
+        Download Resume
+      </ResumeButton>
     </>
   )
 
@@ -256,10 +317,11 @@ const Sidebar: React.FC<SidebarProps> = ({ show }) => {
             top: 16,
             left: 16,
             zIndex: 1200,
-            backgroundColor: "white",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            backgroundColor: "rgba(30, 41, 59, 0.7)",
+            backdropFilter: "blur(10px)",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
             "&:hover": {
-              backgroundColor: "white",
+              backgroundColor: "rgba(30, 41, 59, 0.9)",
             },
           }}
         >
@@ -267,13 +329,7 @@ const Sidebar: React.FC<SidebarProps> = ({ show }) => {
         </IconButton>
       )}
 
-      {show && (
-        <Fade in={true} timeout={200}>
-          <SidebarContainer>
-            {drawerContent}
-          </SidebarContainer>
-        </Fade>
-      )}
+      <SidebarContainer>{sidebarContent}</SidebarContainer>
 
       <MobileDrawer
         variant="temporary"
@@ -284,10 +340,10 @@ const Sidebar: React.FC<SidebarProps> = ({ show }) => {
           keepMounted: true,
         }}
       >
-        {drawerContent}
+        {sidebarContent}
       </MobileDrawer>
     </>
   )
 }
 
-export default Sidebar 
+export default Sidebar

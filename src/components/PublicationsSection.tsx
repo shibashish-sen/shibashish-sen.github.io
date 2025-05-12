@@ -1,13 +1,33 @@
-import React from "react"
+"use client"
+
+import type React from "react"
 import { Box, Typography, Container, List, ListItem, ListItemText, Button } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import SchoolIcon from "@mui/icons-material/School"
+import { motion } from "framer-motion"
+
+const SectionContainer = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(10, 0),
+  position: "relative",
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: "radial-gradient(circle at 70% 30%, rgba(124, 58, 237, 0.1) 0%, transparent 50%)",
+    pointerEvents: "none",
+  },
+}))
 
 const SectionTitle = styled(Typography)(({ theme }) => ({
   fontWeight: 800,
   fontSize: "2.5rem",
   marginBottom: theme.spacing(1),
-  color: theme.palette.text.primary,
+  background: "linear-gradient(135deg, #e2e8f0 0%, #c4b5fd 100%)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
 }))
 
 const SectionSubtitle = styled(Typography)(({ theme }) => ({
@@ -18,13 +38,22 @@ const SectionSubtitle = styled(Typography)(({ theme }) => ({
 }))
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
-  padding: theme.spacing(1, 0),
+  padding: theme.spacing(2, 0),
+  borderBottom: "1px solid rgba(148, 163, 184, 0.1)",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    backgroundColor: "rgba(124, 58, 237, 0.05)",
+    transform: "translateX(5px)",
+  },
 }))
 
 const PublicationTitle = styled(Typography)(({ theme }) => ({
   fontWeight: 600,
   fontSize: "1.1rem",
   marginBottom: theme.spacing(0.5),
+  background: "linear-gradient(135deg, #e2e8f0 0%, #a78bfa 100%)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
 }))
 
 const PublicationMeta = styled(Typography)(({ theme }) => ({
@@ -50,7 +79,28 @@ const ScholarButton = styled(Button)(({ theme }) => ({
   padding: theme.spacing(1),
   borderRadius: "50%",
   marginLeft: theme.spacing(2),
+  backgroundColor: "rgba(30, 41, 59, 0.6)",
+  backdropFilter: "blur(5px)",
+  border: "1px solid rgba(148, 163, 184, 0.2)",
+  color: theme.palette.text.primary,
+  transition: "all 0.3s ease",
+  "&:hover": {
+    backgroundColor: "rgba(124, 58, 237, 0.2)",
+    transform: "translateY(-5px)",
+    boxShadow: "0 10px 20px rgba(124, 58, 237, 0.2)",
+  },
 }))
+
+const SectionHeader = styled(Typography)(({ theme }) => ({
+  fontWeight: 600,
+  fontSize: "1.5rem",
+  marginBottom: theme.spacing(1),
+  marginTop: theme.spacing(6),
+  color: theme.palette.primary.light,
+}))
+
+const MotionBox = motion(Box)
+const MotionListItem = motion(StyledListItem)
 
 interface Publication {
   title: string
@@ -106,79 +156,108 @@ const patents: Publication[] = [
 
 const PublicationsSection: React.FC = () => {
   return (
-    <Box id="publications" sx={{ py: 10, backgroundColor: "#ffffff" }}>
+    <SectionContainer id="publications">
       <Container maxWidth="lg">
-        <SectionTitle variant="h2">Publications & Patents</SectionTitle>
-        <SectionSubtitle variant="h6">
-          My research contributions and intellectual property in AI and product development.
-        </SectionSubtitle>
+        <MotionBox
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <SectionTitle variant="h2">Publications & Patents</SectionTitle>
+          <SectionSubtitle variant="h6">
+            My research contributions and intellectual property in AI and product development.
+          </SectionSubtitle>
+        </MotionBox>
 
-        <HeaderContainer>
-          <Typography variant="h4" component="h2" gutterBottom sx={{ mb: 0 }}>
-            Research Publications
-          </Typography>
-          <ScholarButton
-            variant="outlined"
-            onClick={() => window.open("https://scholar.google.com/citations?user=YOUR_ID", "_blank")}
-            aria-label="Google Scholar Profile"
-          >
-            <SchoolIcon />
-          </ScholarButton>
-        </HeaderContainer>
+        <MotionBox
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <HeaderContainer>
+            <Typography
+              variant="h4"
+              component="h2"
+              gutterBottom
+              sx={{
+                mb: 0,
+                background: "linear-gradient(135deg, #e2e8f0 0%, #a78bfa 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Research Publications
+            </Typography>
+            <ScholarButton
+              variant="outlined"
+              onClick={() => window.open("https://scholar.google.com/citations?user=YOUR_ID", "_blank")}
+              aria-label="Google Scholar Profile"
+            >
+              <SchoolIcon />
+            </ScholarButton>
+          </HeaderContainer>
+        </MotionBox>
 
         <List>
           {publications.map((pub, index) => (
-            <StyledListItem key={index}>
+            <MotionListItem
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+            >
               <ListItemText
-                primary={
-                  <PublicationTitle>
-                    {pub.title}
-                  </PublicationTitle>
-                }
+                primary={<PublicationTitle>{pub.title}</PublicationTitle>}
                 secondary={
                   <>
                     <PublicationMeta>
                       {pub.journal}, {pub.year}
                     </PublicationMeta>
-                    <PublicationDescription>
-                      {pub.description}
-                    </PublicationDescription>
+                    <PublicationDescription>{pub.description}</PublicationDescription>
                   </>
                 }
               />
-            </StyledListItem>
+            </MotionListItem>
           ))}
         </List>
 
-        <Typography variant="h5" fontWeight={600} gutterBottom sx={{ mb: 1, mt: 6, color: "#7c3aed" }}>
-          Patents
-        </Typography>
+        <MotionBox
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+        >
+          <SectionHeader>Patents</SectionHeader>
+        </MotionBox>
 
         <List>
           {patents.map((patent, index) => (
-            <StyledListItem key={index}>
+            <MotionListItem
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
+            >
               <ListItemText
-                primary={
-                  <PublicationTitle>
-                    {patent.title}
-                  </PublicationTitle>
-                }
+                primary={<PublicationTitle>{patent.title}</PublicationTitle>}
                 secondary={
                   <>
                     <PublicationMeta>
                       {patent.journal}, {patent.year}
                     </PublicationMeta>
-                    <PublicationDescription>
-                      {patent.description}
-                    </PublicationDescription>
+                    <PublicationDescription>{patent.description}</PublicationDescription>
                   </>
                 }
               />
-            </StyledListItem>
+            </MotionListItem>
           ))}
         </List>
       </Container>
-    </Box>
+    </SectionContainer>
   )
 }
 

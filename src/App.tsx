@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react"
-import { Box, CssBaseline, useMediaQuery, useTheme } from "@mui/material"
-import { ThemeProvider, createTheme } from "@mui/material/styles"
+"use client"
+
+import type React from "react"
+import { Box, CssBaseline, useMediaQuery } from "@mui/material"
+import { ThemeProvider } from "@mui/material/styles"
 import Sidebar from "./components/Sidebar"
 import ExperienceSection from "./components/ExperienceSection"
 import ProjectsSection from "./components/ProjectsSection"
@@ -10,58 +12,63 @@ import ContactSection from "./components/ContactSection"
 import Footer from "./components/Footer"
 import AboutSection from "./components/EducationSection"
 import HeroSection from "./components/HeroSection"
-
-const theme = createTheme({
-  typography: {
-    fontFamily: '"Inter", "Helvetica", "Arial", sans-serif',
-  },
-  palette: {
-    primary: {
-      main: "#7c3aed",
-    },
-  },
-})
+import theme from "./theme"
 
 const App: React.FC = () => {
-  const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down("md"))
-  const [showSidebar, setShowSidebar] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const heroSection = document.querySelector('.hero-section')
-      if (heroSection) {
-        const rect = heroSection.getBoundingClientRect()
-        setShowSidebar(rect.bottom <= 0)
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ backgroundColor: "#ffffff", minHeight: "100vh" }}>
-        <Box sx={{ position: "relative", height: "100vh" }} className="hero-section">
+      <Box
+        sx={{
+          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+          backgroundAttachment: "fixed",
+          minHeight: "100vh",
+          position: "relative",
+          "&::before": {
+            content: '""',
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundImage:
+              "radial-gradient(circle at 25% 25%, rgba(124, 58, 237, 0.15) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(56, 189, 248, 0.15) 0%, transparent 50%)",
+            pointerEvents: "none",
+            zIndex: 0,
+          },
+        }}
+      >
+        <Box sx={{ position: "relative", height: "100vh", zIndex: 1 }} className="hero-section">
           <HeroSection />
         </Box>
-        <Box sx={{ 
-          position: "relative",
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: isMobile ? "column" : "row"
-        }}>
-          <Sidebar show={showSidebar} />
-          <Box sx={{ 
-            flex: 1, 
-            ml: isMobile ? 0 : "calc(25% + 140px)",
-            mr: isMobile ? 0 : "10%",
-            width: isMobile ? "100%" : "calc(70% - 140px)",
-            px: isMobile ? 2 : 0
-          }}>
-            <div id="about-section">
+
+        <Box
+          sx={{
+            position: "relative",
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row",
+            maxWidth: "1400px",
+            mx: "auto",
+            px: isMobile ? 2 : 4,
+            gap: 4,
+            zIndex: 1,
+          }}
+        >
+          {!isMobile && (
+            <Box sx={{ width: "280px", flexShrink: 0 }}>
+              <Sidebar />
+            </Box>
+          )}
+
+          <Box
+            sx={{
+              flex: 1,
+              width: isMobile ? "100%" : "auto",
+            }}
+          >
+            <div id="about">
               <AboutSection />
             </div>
             <ExperienceSection />
@@ -71,7 +78,8 @@ const App: React.FC = () => {
             <ContactSection />
           </Box>
         </Box>
-        <Box sx={{ position: "relative", width: "100%" }}>
+
+        <Box sx={{ position: "relative", width: "100%", zIndex: 1 }}>
           <Footer />
         </Box>
       </Box>
